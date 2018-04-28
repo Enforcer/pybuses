@@ -1,6 +1,8 @@
 Pythonic implementation of CQRS command bus 
 ====
-Zero-dependencies, flexible implementation of Command Bus. *Python 3.6+ only* 
+[![Build Status](https://travis-ci.org/Enforcer/pycommand_bus.svg?branch=master)](https://travis-ci.org/Enforcer/pycommand_bus)
+
+Zero-dependencies, flexible implementation of Command Bus. *Python 3.5+ only* 
 ## Basic usage
 ```python
 import contextlib
