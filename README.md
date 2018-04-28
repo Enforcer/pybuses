@@ -44,3 +44,28 @@ command_bus_with_middleware = CommandBus([example_middleware])
 command_bus_with_middleware.handle(MakeSandwich(['cheese', 'ham']))
 ```
 
+## attrs-compatible
+Using [attrs](http://attrs.org/) for building commands is supported (and highly recommended).
+```python
+import attr
+from pycommand_bus import (
+    command,
+    CommandBus,
+)
+
+
+@command
+@attr.s(frozen=True)
+class Example:
+    number: int = attr.ib()
+    name: str = attr.ib()
+
+
+@Example.handler
+def handleeee(command):
+    print('handler!', command)
+
+
+cb = CommandBus()
+cb.handle(Example(number=1, name='Sebastian'))
+```
