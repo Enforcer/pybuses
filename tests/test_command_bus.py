@@ -1,3 +1,4 @@
+import contextlib
 import typing
 from unittest import mock
 
@@ -30,17 +31,15 @@ def test_should_raise_exception_if_handler_has_not_been_registered(
         command_bus.handle(command)
 
 
-def create_middleware_and_mock() -> typing.Tuple[pycommand_bus.Middleware, mock.Mock]:
+def create_middleware_and_mock() -> typing.Tuple[typing.Callable, mock.Mock]:
     middleware_mock = mock.Mock()
 
-    class MyMiddleware(pycommand_bus.Middleware):
-        def before(self, command: pycommand_bus.CommandType) -> None:
-            pass
+    @contextlib.contextmanager
+    def my_middleware(command: pycommand_bus.CommandType) -> None:
+        yield
+        middleware_mock(command)
 
-        def after(self, command: pycommand_bus.CommandType) -> None:
-            middleware_mock(command)
-
-    return MyMiddleware(), middleware_mock
+    return my_middleware, middleware_mock
 
 
 def test_should_call_middleware(exemplary_command: typing.Type) -> None:
