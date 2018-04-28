@@ -23,7 +23,7 @@ class MakeSandwich:
 
 # Then decorate callable responsible for handling command
 @MakeSandwich.handler
-def sandwich_maker(command: MakeSandwich):
+def sandwich_maker(command: MakeSandwich) -> None:
     print(f'Making sandwich with {command.ingredients}!')
     
 command_bus = CommandBus()
@@ -64,7 +64,7 @@ class Example:
 
 
 @Example.handler
-def handleeee(command):
+def handleeee(command) -> None:
     print('handler!', command)
 
 
