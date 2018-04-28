@@ -32,6 +32,8 @@ command_bus.handle(MakeSandwich(['cheese', 'ham']))
 
 ## Middlewares
 Middlewares are lightweight plugins that let us inject custom logic before and after given command was handled.
+
+Context managers are for now the only supported way of defining middlewares. They simplify exception handling and specifying whether middleware logic should be executed before or after handling event. 
 ```python
 @contextlib.contextmanager
 def example_middleware(command: CommandType) -> None:
