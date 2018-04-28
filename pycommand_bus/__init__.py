@@ -1,2 +1,5 @@
-from pycommand_bus.command import command
+from pycommand_bus.commandtype import (
+    command,
+    CommandType,
+)
 from pycommand_bus import command_bus

@@ -53,6 +53,6 @@ def test_should_not_allow_for_registering_multiple_handlers(exemplary_command: t
     namedtuple('Example', 'field_a field_b'),
     type('Example', (), {'__slots__': ()})
 ])
-def should_raise_exception_if_can_not_set_handler(command: object):
+def should_raise_exception_if_can_not_set_handler(command: object) -> None:
     with pytest.raises(Exception):
         exemplary_command.handler(lambda: None)
