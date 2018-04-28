@@ -18,8 +18,10 @@ class CommandType:
 
 def command(class_: CommandCandidateType) -> typing.Union[CommandCandidateType, CommandType]:
     def _add_handler_decorator(func: typing.Callable) -> None:
-        attr_name = '_pycommand_bus_handler'
-        if hasattr(class_, attr_name):
+        if not callable(func):
+            raise Exception('Handler must be callable!')
+
+        if hasattr(class_, constants.HANDLER_ATTR_NAME):
             raise Exception('You can use only one handler for each command!')
 
         setattr(class_, constants.HANDLER_ATTR_NAME, weakref.ref(func))
