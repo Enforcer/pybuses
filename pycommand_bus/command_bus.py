@@ -1,10 +1,10 @@
 from pycommand_bus import (
-    command,
+    command_decorator,
     constants,
 )
 
 
-def handle(command: object) -> None:
+def handle(command: command_decorator.CommandType) -> None:
     try:
         handler_weak_ref = getattr(command, constants.HANDLER_ATTR_NAME)
         handler = handler_weak_ref()
