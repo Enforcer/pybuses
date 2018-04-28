@@ -4,7 +4,7 @@ from pycommand_bus import (
 )
 
 
-def dispatch(command: object) -> None:
+def handle(command: object) -> None:
     try:
         handler_weak_ref = getattr(command, constants.HANDLER_ATTR_NAME)
         handler = handler_weak_ref()
