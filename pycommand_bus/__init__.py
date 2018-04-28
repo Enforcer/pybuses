@@ -3,3 +3,4 @@ from pycommand_bus.command_decorator import (
     CommandType,
 )
 from pycommand_bus.command_bus import CommandBus
+from pycommand_bus.middleware import Middleware

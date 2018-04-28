@@ -17,7 +17,7 @@ class CommandType:
 
 
 def command(class_: CommandCandidateType) -> typing.Union[CommandCandidateType, CommandType]:
-    def _add_handler_decorator(func: typing.Callable) -> None:
+    def _add_handler_decorator(func: typing.Callable) -> typing.Callable:
         if not callable(func):
             raise Exception('Handler must be callable!')
 
@@ -25,6 +25,8 @@ def command(class_: CommandCandidateType) -> typing.Union[CommandCandidateType, 
             raise Exception('You can use only one handler for each command!')
 
         setattr(class_, constants.HANDLER_ATTR_NAME, weakref.ref(func))
+
+        return func
 
     try:
         setattr(class_, 'handler', _add_handler_decorator)
