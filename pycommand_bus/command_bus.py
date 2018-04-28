@@ -8,7 +8,7 @@ from pycommand_bus import (
 
 
 class CommandBus:
-    def __init__(self, middlewares: typing.Optional[typing.List[typing.ContextManager]] = None) -> None:
+    def __init__(self, middlewares: typing.Optional[typing.List[typing.Callable]] = None) -> None:
         if not middlewares:
             middlewares = []
 

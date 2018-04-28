@@ -35,7 +35,7 @@ def create_middleware_and_mock() -> typing.Tuple[typing.Callable, mock.Mock]:
     middleware_mock = mock.Mock()
 
     @contextlib.contextmanager
-    def my_middleware(command: pycommand_bus.CommandType) -> None:
+    def my_middleware(command: pycommand_bus.CommandType) -> typing.Generator:
         yield
         middleware_mock(command)
 
