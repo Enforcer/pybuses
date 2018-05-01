@@ -1,6 +1,7 @@
 Pythonic implementation of CQRS command bus 
 ====
 [![Build Status](https://travis-ci.org/Enforcer/pycommand_bus.svg?branch=master)](https://travis-ci.org/Enforcer/pycommand_bus)
+[![Coverage Status](https://coveralls.io/repos/github/Enforcer/pycommand_bus/badge.svg)](https://coveralls.io/github/Enforcer/pycommand_bus)
 
 Zero-dependencies, flexible implementation of Command Bus. *Python 3.5+ only* 
 ## Basic usage
