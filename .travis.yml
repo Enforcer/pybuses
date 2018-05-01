@@ -9,4 +9,5 @@ script:
   - pytest --cov pycommand_bus/
   - mypy tests/ pycommand_bus/
   - pycodestyle --max-line-length=120 tests/ pycommand_bus/
+  - coveralls
 
