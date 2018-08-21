@@ -31,6 +31,15 @@ def test_should_raise_exception_if_handler_has_not_been_registered(
         command_bus.handle(command)
 
 
+def test_should_not_allow_for_multiple_handlers(
+    command_bus: pycommand_bus.CommandBus, exemplary_command: typing.Type
+) -> None:
+    exemplary_command.handler(lambda command: None)
+
+    with pytest.raises(Exception):
+        exemplary_command.handler(lambda command: None)
+
+
 def create_middleware_and_mock() -> typing.Tuple[typing.Callable, mock.Mock]:
     middleware_mock = mock.Mock()
 
