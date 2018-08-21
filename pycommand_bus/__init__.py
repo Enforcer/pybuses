@@ -1,4 +1,4 @@
-from pycommand_bus.command_decorator import (
+from pycommand_bus.decorators import (
     command,
     CommandType,
 )

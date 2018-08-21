@@ -25,7 +25,6 @@ def command(class_: CommandCandidateType) -> typing.Union[CommandCandidateType, 
             raise Exception('You can use only one handler for each command!')
 
         setattr(class_, constants.HANDLER_ATTR_NAME, weakref.ref(func))
-
         return func
 
     try:
