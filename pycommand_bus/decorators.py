@@ -1,10 +1,10 @@
 import typing
 import weakref
 
-from pycommand_bus import constants
-
-
-CommandCandidateType = typing.TypeVar('CommandCandidateType')
+from pycommand_bus import (
+    constants,
+    types,
+)
 
 
 ADD_HANDLER_DECORATOR_PROP_NAME = 'handler'
@@ -16,7 +16,7 @@ class CommandType:
         pass
 
 
-def command(class_: CommandCandidateType) -> typing.Union[CommandCandidateType, CommandType]:
+def command(class_: types.CommandCandidateType) -> typing.Union[types.CommandCandidateType, CommandType]:
     def _add_handler_decorator(func: typing.Callable) -> typing.Callable:
         if not callable(func):
             raise Exception('Handler must be callable!')
