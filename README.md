@@ -4,7 +4,7 @@ Pythonic implementations of Command and Event Buses
 [![Coverage Status](https://coveralls.io/repos/github/Enforcer/pycommand_bus/badge.svg)](https://coveralls.io/github/Enforcer/pycommand_bus)
 
 Zero-dependencies, flexible implementation of Command Bus. *Python 3.5+ only* 
-## Basic usage
+## Basic usage of CommandBus
 ```python
 from typing import List
 
@@ -51,6 +51,39 @@ command_bus = CommandBus([example_middleware])
 command_bus.subscribe(sandwich_maker)
 command_bus.handle(MakeSandwich(['cheese', 'ham']))
 ```
+
+
+## Basic usage of EventBus
+```python
+from decimal import Decimal
+
+from pybuses import EventBus
+
+
+# Create event
+class PaymentMade:
+    amount: Decimal
+    who: int
+
+    def __init__(self, amount: Decimal, who: int) -> None:
+        self.amount = amount
+        self.who = who
+
+
+def handler(payment_made: PaymentMade) -> None:
+    print(f'Oh, cool! {payment_made.who} paid {payment_made.amount / 100}$!')
+
+
+event_bus = EventBus()
+event_bus.subscribe(handler)
+event_bus.post(PaymentMade(Decimal('10.99'), 123))
+```
+
+## Similarities & differences between Event- and CommandBus
+EventBus can have 0 or many handlers subscribed to every event, while CommandBus must have exactly one handler for each command.
+
+CommandBus supports middlewares while EventBus does not.
+
 
 ## data classes compatible
 Using [dataclasses](https://docs.python.org/3/library/dataclasses.html) for building commands/events is supported
