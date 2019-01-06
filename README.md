@@ -1,4 +1,4 @@
-Pythonic implementation of CQRS command bus 
+Pythonic implementations of Command and Event Buses 
 ====
 [![Build Status](https://travis-ci.org/Enforcer/pycommand_bus.svg?branch=master)](https://travis-ci.org/Enforcer/pycommand_bus)
 [![Coverage Status](https://coveralls.io/repos/github/Enforcer/pycommand_bus/badge.svg)](https://coveralls.io/github/Enforcer/pycommand_bus)
@@ -6,28 +6,26 @@ Pythonic implementation of CQRS command bus
 Zero-dependencies, flexible implementation of Command Bus. *Python 3.5+ only* 
 ## Basic usage
 ```python
-import contextlib
-import typing
+from typing import List
 
-from pycommand_bus import (
-    command,
-    CommandBus,
-    CommandType,
-) 
+from pybuses import CommandBus
+
 
 # Firstly, create command class
-@command
 class MakeSandwich:
-    def __init__(self, ingredients: typing.List[str]) -> None:
+    def __init__(self, ingredients: List[str]) -> None:
         self.ingredients = ingredients
-        
 
-# Then decorate callable responsible for handling command
-@MakeSandwich.handler
+
+# Then create callable responsible for handling command.
+# It must accept only one argument and is required to have type annotation for it.
 def sandwich_maker(command: MakeSandwich) -> None:
     print(f'Making sandwich with {command.ingredients}!')
-    
+
+
+# finally, register the handler by subscribing
 command_bus = CommandBus()
+command_bus.subscribe(sandwich_maker)
 command_bus.handle(MakeSandwich(['cheese', 'ham']))
 ```
 
@@ -36,39 +34,65 @@ Middlewares are lightweight plugins that let us inject custom logic before and a
 
 Context managers are for now the only supported way of defining middlewares. They simplify exception handling and specifying whether middleware logic should be executed before or after handling event. 
 ```python
+import contextlib
+from typing import (
+    Any,
+    Generator,
+)
+
 @contextlib.contextmanager
-def example_middleware(command: CommandType) -> None:
+def example_middleware(command: Any) -> Generator:
     print(f'Before handling {command}')
     yield
     print(f'After handling {command}')
-    
-    
-command_bus_with_middleware = CommandBus([example_middleware])
-command_bus_with_middleware.handle(MakeSandwich(['cheese', 'ham']))
+
+
+command_bus = CommandBus([example_middleware])
+command_bus.subscribe(sandwich_maker)
+command_bus.handle(MakeSandwich(['cheese', 'ham']))
 ```
 
-## attrs-compatible
-Using [attrs](http://attrs.org/) for building commands is supported (and highly recommended).
+## data classes compatible
+Using [dataclasses](https://docs.python.org/3/library/dataclasses.html) for building commands/events is supported
+```python
+from dataclasses import dataclass
+from typing import List
+
+from pybuses import CommandBus
+
+
+@dataclass
+class MakeSandwich:
+    ingredients: List[str]
+
+
+def handler(command: MakeSandwich) -> None:
+    print(f'dataclass-based command: {command}')
+
+
+command_bus = CommandBus()
+command_bus.subscribe(handler)
+command_bus.handle(MakeSandwich(['ham', 'butter']))
+```
+
+## attrs compatible
+Using [attrs](http://attrs.org/) for building commands/events is supported
 ```python
 import attr
-from pycommand_bus import (
-    command,
-    CommandBus,
-)
+from pybuses import CommandBus
 
 
-@command
 @attr.s(frozen=True)
 class Example:
     number: int = attr.ib()
     name: str = attr.ib()
 
 
-@Example.handler
-def handleeee(command) -> None:
-    print('handler!', command)
+def example_handler(command: Example) -> None:
+    print(f'Inside handler of {type(command)} - got {command}!')
 
 
-cb = CommandBus()
-cb.handle(Example(number=1, name='Sebastian'))
+command_bus = CommandBus()
+command_bus.subscribe(example_handler)
+command_bus.handle(Example(number=1, name='Sebastian'))
 ```

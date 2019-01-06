@@ -6,8 +6,8 @@ python:
 install:
   - pip install -r requirements-tests.txt
 script:
-  - pytest --cov pycommand_bus/
-  - mypy tests/ pycommand_bus/
-  - pycodestyle --max-line-length=120 tests/ pycommand_bus/
+  - pytest --cov pybuses/
+  - mypy tests/ pybuses/ examples/
+  - pycodestyle --max-line-length=120 tests/ pybuses/ examples/
   - coveralls
 

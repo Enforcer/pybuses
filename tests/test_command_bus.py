@@ -4,26 +4,30 @@ from unittest import mock
 
 import pytest
 
-import pycommand_bus
+import pybuses
 
 
 @pytest.fixture()
-def command_bus() -> pycommand_bus.CommandBus:
-    return pycommand_bus.CommandBus()
+def command_bus() -> pybuses.CommandBus:
+    return pybuses.CommandBus()
 
 
-def test_should_execute_command(command_bus: pycommand_bus.CommandBus, exemplary_command: typing.Type) -> None:
-    handler_mock = mock.Mock()
-    exemplary_command.handler(handler_mock)
+def test_should_execute_command(command_bus: pybuses.CommandBus, exemplary_command: typing.Type) -> None:
+    a_mock = mock.Mock()
+
+    def handler(command: exemplary_command) -> None:  # type: ignore
+        a_mock(command)
+
+    command_bus.subscribe(handler)
 
     command = exemplary_command('some_data')
     command_bus.handle(command)
 
-    handler_mock.assert_called_once_with(command)
+    a_mock.assert_called_once_with(command)
 
 
 def test_should_raise_exception_if_handler_has_not_been_registered(
-    command_bus: pycommand_bus.CommandBus, exemplary_command: typing.Type
+    command_bus: pybuses.CommandBus, exemplary_command: typing.Type
 ) -> None:
     command = exemplary_command('czy ta bajka sie nie konczy zleeeee')
 
@@ -32,19 +36,22 @@ def test_should_raise_exception_if_handler_has_not_been_registered(
 
 
 def test_should_not_allow_for_multiple_handlers(
-    command_bus: pycommand_bus.CommandBus, exemplary_command: typing.Type
+    command_bus: pybuses.CommandBus, exemplary_command: typing.Type
 ) -> None:
-    exemplary_command.handler(lambda command: None)
+    def handler(_command: exemplary_command) -> None:  # type: ignore
+        pass
+
+    command_bus.subscribe(handler)
 
     with pytest.raises(Exception):
-        exemplary_command.handler(lambda command: None)
+        command_bus.subscribe(handler)
 
 
 def create_middleware_and_mock() -> typing.Tuple[typing.Callable, mock.Mock]:
     middleware_mock = mock.Mock()
 
     @contextlib.contextmanager
-    def my_middleware(command: pycommand_bus.CommandType) -> typing.Generator:
+    def my_middleware(command) -> typing.Generator:  # type: ignore
         yield
         middleware_mock(command)
 
@@ -54,11 +61,12 @@ def create_middleware_and_mock() -> typing.Tuple[typing.Callable, mock.Mock]:
 def test_should_call_middleware(exemplary_command: typing.Type) -> None:
     middleware, middleware_mock = create_middleware_and_mock()
 
-    command_bus = pycommand_bus.CommandBus([middleware])
+    command_bus = pybuses.CommandBus([middleware])
 
-    @exemplary_command.handler
-    def handler(_command: pycommand_bus.CommandType) -> None:
+    def handler(_command: exemplary_command) -> None:    # type: ignore
         pass
+
+    command_bus.subscribe(handler)
 
     command = exemplary_command('wololo')
     command_bus.handle(command)
@@ -70,12 +78,12 @@ def test_should_call_whole_chain(exemplary_command: typing.Type) -> None:
     middleware_1, middleware_mock_1 = create_middleware_and_mock()
     middleware_2, middleware_mock_2 = create_middleware_and_mock()
 
-    command_bus = pycommand_bus.CommandBus([middleware_1, middleware_2])
+    command_bus = pybuses.CommandBus([middleware_1, middleware_2])
 
-    @exemplary_command.handler
-    def handler(_command: pycommand_bus.CommandType) -> None:
+    def handler(_command: exemplary_command) -> None:    # type: ignore
         pass
 
+    command_bus.subscribe(handler)
     command = exemplary_command('wololo')
     command_bus.handle(command)
 
