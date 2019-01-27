@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pybuses",
-    version="1.0.0",
+    version="1.1.0",
     author="Sebastian Buczyński",
     author_email="nnplaya@gmail.com",
     description="Pythonic Command & Event buses",

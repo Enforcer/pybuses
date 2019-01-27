@@ -33,11 +33,26 @@ def test_should_run_listener(event_bus: EventBus, event_class: Subscribable) -> 
     a_mock.assert_called_once_with(an_event)
 
 
-def test_should_not_allow_adding_invalid_subscriber(
-        event_bus: EventBus, event_class: Subscribable
-) -> None:
+def test_should_not_allow_adding_invalid_subscriber(event_bus: EventBus, event_class: Subscribable) -> None:
     def invalid_handler(_event: event_class, _another_arg: int) -> None:  # type: ignore
         pass
 
     with pytest.raises(ValueError):
         event_bus.subscribe(invalid_handler)  # type: ignore
+
+
+def test_should_support_methods(event_bus: EventBus, event_class: Subscribable) -> None:
+    a_mock = mock.Mock()
+
+    class SomeClass:
+        def __init__(self) -> None:
+            event_bus.subscribe(self.some_listener)
+
+        def some_listener(self, event: event_class) -> None:  # type: ignore
+            a_mock(event)
+
+    SomeClass()
+    an_event = event_class()  # type: ignore
+    event_bus.post(an_event)
+
+    a_mock.assert_called_once_with(an_event)
