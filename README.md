@@ -1,6 +1,6 @@
 Pythonic implementations of Command and Event Buses 
 ====
-[![Build Status](https://travis-ci.org/Enforcer/pycommand_bus.svg?branch=master)](https://travis-ci.org/Enforcer/pycommand_bus)
+[![Build Status](https://travis-ci.org/Enforcer/pybuses.svg?branch=master)](https://travis-ci.org/Enforcer/pybuses)
 [![Coverage Status](https://coveralls.io/repos/github/Enforcer/pycommand_bus/badge.svg)](https://coveralls.io/github/Enforcer/pycommand_bus)
 
 Zero-dependencies, flexible implementation of Command Bus. *Python 3.6+ only*
